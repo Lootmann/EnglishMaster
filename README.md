@@ -65,9 +65,10 @@ class Sentence:
 ### Endpoint
 
 ```
-GET   /sentences?limit=<int>&offset=<int>
+GET   /sentences?limit=<int>&offset=<int>&random=true
 GET   /sentences/:sentence_id
 POST  /sentences
+POST  /sentences/:sentence_id/counter
 PATCH /sentences/:sentence_id
 DELET /sentences/:sentence_id
 ```
