@@ -73,8 +73,21 @@ def update_sentence(
     if not sentence:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Sentence:{sentence_id} Not Found",
+            detail=f"Sentence: {sentence_id} Not Found",
         )
     return sentence_api.update_sentence(db, sentence, sentence_body)
 
 
+@router.delete(
+    "/sentences/{sentence_id}",
+    response_model=None,
+    status_code=status.HTTP_200_OK,
+)
+def delete_sentence(sentence_id: int, db: Session = Depends(get_db)):
+    sentence = sentence_api.find_by_id(db, sentence_id)
+    if not sentence:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sentence: {sentence_id} Not Found",
+        )
+    return sentence_api.delete_sentence(db, sentence)

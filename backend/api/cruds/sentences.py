@@ -53,3 +53,7 @@ def update_sentence(
     return original
 
 
+def delete_sentence(db: Session, original) -> None:
+    db.delete(original)
+    db.commit()
+    return

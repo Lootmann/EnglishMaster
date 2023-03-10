@@ -97,6 +97,7 @@ class TestUpdateSentences:
         sentence_json = {"text": "updated", "translation": "updated"}
         resp = client.patch(f"/sentences/123", json=sentence_json)
         assert resp.status_code == status.HTTP_404_NOT_FOUND
+        assert resp.json() == {"detail": f"Sentence: 123 Not Found"}
 
     def test_update_sentence_with_lack_postdata(self, client):
         sentence_resp = SentenceFactory.create_sentence(client)
@@ -116,3 +117,23 @@ class TestUpdateSentences:
         resp_obj = resp.json()
         assert resp_obj["text"] == "updated"
         assert resp_obj["translation"] == "updated"
+
+
+class TestDeleteSentence:
+    def test_delete_sentence(self, client):
+        sentence_resp = SentenceFactory.create_sentence(client)
+
+        resp = client.get("/sentences")
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.json()) == 1
+
+        resp = client.delete(f"/sentences/{sentence_resp.id}")
+        assert resp.status_code == status.HTTP_200_OK
+
+        resp = client.get("/sentences")
+        assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.json()) == 0
+
+    def test_delete_sentence_with_wrong_id(self, client):
+        resp = client.delete("/sentences/123")
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
