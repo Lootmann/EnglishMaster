@@ -1,5 +1,6 @@
 import React from "react";
 import InputForm from "./InputForm";
+import ShowSentence from "./ShowSentece";
 
 export function Index() {
   const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -9,7 +10,7 @@ export function Index() {
 
   return (
     <div className="h-full flex gap-2">
-      <div className="flex-1 p-4 rounded-md">
+      <div className="flex flex-col gap-2 flex-1 p-4 rounded-md text-2xl">
         <div className="flex items-baseline gap-6">
           <h2 className="text-3xl">Sencentes</h2>
           <button
@@ -18,6 +19,10 @@ export function Index() {
           >
             Create
           </button>
+        </div>
+
+        <div className="flex-1 bg-slate-500 rounded-md p-2">
+          <ShowSentence />
         </div>
       </div>
 
