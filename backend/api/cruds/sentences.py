@@ -29,7 +29,7 @@ def find_by_id(db: Session, sentence_id: int) -> SentenceModel | None:
 
 def get_random(db: Session) -> SentenceModel | None:
     stmt = db.query(SentenceModel).order_by(func.random())
-    return stmt.all()
+    return stmt.first()
 
 
 def create_sentence(

@@ -69,8 +69,11 @@ class TestGetSentence:
 class TestGetRandomSentence:
     def test_get_random_sentence(self, client):
         SentenceFactory.create_sentence(client)
+        SentenceFactory.create_sentence(client)
+        SentenceFactory.create_sentence(client)
         resp = client.get("/sentences?random=true")
         assert resp.status_code == status.HTTP_200_OK
+        assert len(resp.json()) == 1
 
 
 class TestPostSentences:

@@ -26,7 +26,7 @@ def get_all_sentences(
     db: Session = Depends(get_db),
 ):
     if random:
-        return sentence_api.get_random(db)
+        return [sentence_api.get_random(db)]
 
     if limit is None and offset is None:
         pass
