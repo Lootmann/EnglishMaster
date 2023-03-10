@@ -66,6 +66,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 *.db
+dump/*
 
 
 # Flask stuff:
@@ -174,4 +175,3 @@ poetry.toml
 .ruff_cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
-
