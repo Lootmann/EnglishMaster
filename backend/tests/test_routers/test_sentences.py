@@ -66,6 +66,13 @@ class TestGetSentence:
         assert resp.status_code == status.HTTP_404_NOT_FOUND
 
 
+class TestGetRandomSentence:
+    def test_get_random_sentence(self, client):
+        SentenceFactory.create_sentence(client)
+        resp = client.get("/sentences?random=true")
+        assert resp.status_code == status.HTTP_200_OK
+
+
 class TestPostSentences:
     def test_create_sentence(self, client):
         sentence_data = {"text": "hoge", "translation": "ほげ"}

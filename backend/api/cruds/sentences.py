@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import select
 
@@ -24,6 +25,11 @@ def get_all_sentences(
 def find_by_id(db: Session, sentence_id: int) -> SentenceModel | None:
     stmt = select(SentenceModel).where(SentenceModel.id == sentence_id)
     return db.execute(stmt).scalar()
+
+
+def get_random(db: Session) -> SentenceModel | None:
+    stmt = db.query(SentenceModel).order_by(func.random())
+    return stmt.all()
 
 
 def create_sentence(

@@ -8,19 +8,26 @@ from api.cruds import sentences as sentence_api
 from api.db import get_db
 from api.schemas import sentences as sentence_schema
 
-router = APIRouter(tags=["sentences"])
+router = APIRouter(
+    tags=["sentences"],
+    prefix="/sentences",
+)
 
 
 @router.get(
-    "/sentences",
+    "/",
     response_model=List[sentence_schema.Sentence],
     status_code=status.HTTP_200_OK,
 )
 def get_all_sentences(
     limit: int | None = None,
     offset: int | None = None,
+    random: bool | None = None,
     db: Session = Depends(get_db),
 ):
+    if random:
+        return sentence_api.get_random(db)
+
     if limit is None and offset is None:
         pass
 
@@ -33,7 +40,7 @@ def get_all_sentences(
 
 
 @router.get(
-    "/sentences/{sentence_id}",
+    "/{sentence_id}",
     response_model=sentence_schema.Sentence,
     status_code=status.HTTP_200_OK,
 )
@@ -48,7 +55,7 @@ def find_by_id(sentence_id: int, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/sentences",
+    "/",
     response_model=sentence_schema.SentenceCreateResponse,
     status_code=status.HTTP_201_CREATED,
 )
@@ -60,7 +67,7 @@ def create_sentence(
 
 
 @router.patch(
-    "/sentences/{sentence_id}",
+    "/{sentence_id}",
     response_model=sentence_schema.Sentence,
     status_code=status.HTTP_200_OK,
 )
@@ -79,7 +86,7 @@ def update_sentence(
 
 
 @router.delete(
-    "/sentences/{sentence_id}",
+    "/{sentence_id}",
     response_model=None,
     status_code=status.HTTP_200_OK,
 )
