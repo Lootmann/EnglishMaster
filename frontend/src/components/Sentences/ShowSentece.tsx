@@ -1,5 +1,6 @@
-import React from "react";
 import axios from "axios";
+import React from "react";
+
 import { API_URL } from "../../utils/settings";
 import { truncate } from "../../utils/strings";
 
