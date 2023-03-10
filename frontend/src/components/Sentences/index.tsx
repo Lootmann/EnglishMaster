@@ -1,7 +1,7 @@
 import React from "react";
 
 import InputForm from "./InputForm";
-import ShowSentence from "./ShowSentece";
+import ShowSentence from "./ShowSentence";
 
 export function Index() {
   const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
