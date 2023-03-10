@@ -13,7 +13,7 @@ export function RandomSentence() {
     counter: 0,
   });
 
-  const [isFlip, setFlip] = React.useState<boolean>(false);
+  const [isFlip, setFlip] = React.useState<boolean>(true);
 
   const [refresh, setRefresh] = React.useState<boolean>(false);
 
@@ -35,12 +35,12 @@ export function RandomSentence() {
   return (
     <>
       {sentence.id !== 0 && (
-        <div className="h-full w-2/3 ml-auto mr-auto flex flex-col gap-2 p-4">
+        <div className="h-full w-3/5 ml-auto mr-auto flex flex-col gap-2 p-4">
           <header className="flex gap-4 mb-4 items-baseline text-2xl">
             <h2 className="text-2xl">Random Sentence</h2>
           </header>
 
-          {/* TODO: flip card */}
+          {/* FIXME: flip card with animation */}
           <div
             onClick={() => setFlip(!isFlip)}
             className="h-1/2 mb-4 flex flex-col gap-4 p-4 border-2 border-slate-400 rounded-md"
