@@ -6,9 +6,10 @@ import { API_URL } from "../../utils/settings";
 type ModalProp = {
   isModalOpen: boolean;
   handleModal: (isOpened: boolean) => void;
+  handleRefresh: () => void;
 };
 
-function InputForm({ isModalOpen, handleModal }: ModalProp) {
+function InputForm({ isModalOpen, handleModal, handleRefresh }: ModalProp) {
   const [form, setForm] = React.useState<SentenceFormType>({
     text: "",
     translation: "",
@@ -30,13 +31,14 @@ function InputForm({ isModalOpen, handleModal }: ModalProp) {
         translation: form.translation,
       })
       .then((resp) => {
-        console.log(resp);
+        console.log(">>> Sentence/InputForm.tsx handleSubmit()", resp);
         console.log(resp.data);
       });
 
     // remove Modal - continuous input
     setForm({ text: "", translation: "" });
     handleModal(false);
+    handleRefresh();
   }
 
   return (

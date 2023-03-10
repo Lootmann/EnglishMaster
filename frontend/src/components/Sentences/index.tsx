@@ -9,6 +9,11 @@ export function Index() {
     setModalOpen(isOpened);
   }
 
+  const [refresh, setRefresh] = React.useState<boolean>(false);
+  function handleRefresh() {
+    setRefresh(!refresh);
+  }
+
   return (
     <div className="h-full flex gap-2">
       <div className="flex flex-col gap-2 flex-1 p-4 rounded-md text-2xl">
@@ -23,7 +28,7 @@ export function Index() {
         </div>
 
         <div className="flex-1 bg-slate-500 rounded-md p-2">
-          <ShowSentence />
+          <ShowSentence refresh={refresh} />
         </div>
       </div>
 
@@ -35,6 +40,7 @@ export function Index() {
       <InputForm
         isModalOpen={isModalOpen}
         handleModal={() => handleModal(false)}
+        handleRefresh={() => handleRefresh()}
       />
     </div>
   );

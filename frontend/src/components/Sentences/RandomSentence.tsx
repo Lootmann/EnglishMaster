@@ -20,7 +20,6 @@ export function RandomSentence() {
   React.useEffect(() => {
     axios.get(API_URL + "/sentences?random=true").then((resp) => {
       setSentence(resp.data[0]);
-      console.log(resp.data[0]);
     });
   }, [refresh]);
 
@@ -28,7 +27,7 @@ export function RandomSentence() {
     e.preventDefault();
     axios.post(API_URL + `/sentences/${sentence.id}/counter`).then((resp) => {
       setSentence({ ...sentence, counter: sentence.counter + 1 });
-      console.log(resp);
+      console.log(">>> Sentences/RandomSentence.tsx", resp);
       console.log(resp.data);
     });
   }
