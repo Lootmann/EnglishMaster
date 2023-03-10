@@ -66,6 +66,17 @@ def create_sentence(
     return sentence_api.create_sentence(db, sentence_body)
 
 
+@router.post("/{sentence_id}/counter")
+def count_sentence(sentence_id: int, db: Session = Depends(get_db)):
+    sentence = sentence_api.find_by_id(db, sentence_id)
+    if not sentence:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sentence: {sentence_id} Not Found",
+        )
+    return sentence_api.increase_count(db, sentence)
+
+
 @router.patch(
     "/{sentence_id}",
     response_model=sentence_schema.Sentence,

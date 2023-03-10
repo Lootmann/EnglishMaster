@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class SentenceBase(BaseModel):
     text: str = Field("")
     translation: str = Field("")
+    counter: int = Field(0)
 
     class Config:
         orm_mode = True
@@ -31,6 +32,7 @@ class Sentence(BaseModel):
     id: int
     text: str
     translation: str
+    counter: int
 
     class Config:
         orm_mode = True

@@ -42,6 +42,14 @@ def create_sentence(
     return sentence
 
 
+def increase_count(db: Session, original: SentenceModel) -> SentenceModel:
+    original.counter += 1
+    db.add(original)
+    db.commit()
+    db.refresh(original)
+    return original
+
+
 def update_sentence(
     db: Session,
     original: SentenceModel,

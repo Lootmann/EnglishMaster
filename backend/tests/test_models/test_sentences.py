@@ -7,4 +7,7 @@ def test_sentence_model_repr():
     sentence = SentenceModel(**sentence_body.dict())
     sentence.id = 1
 
-    assert str(sentence) == f"<Sentence (id, text, translation) = (1, hello, こんにちは)>"
+    assert (
+        str(sentence)
+        == f"<Sentence (id, counter, text, translation) = (1, 0, hello, こんにちは)>"
+    )
