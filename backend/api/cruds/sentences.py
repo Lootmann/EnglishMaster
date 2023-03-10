@@ -34,3 +34,22 @@ def create_sentence(
     db.commit()
     db.refresh(sentence)
     return sentence
+
+
+def update_sentence(
+    db: Session,
+    original: SentenceModel,
+    update_body: sentence_schema.SentenceUpdate,
+) -> SentenceModel:
+    if update_body.text != "":
+        original.text = update_body.text
+
+    if update_body.translation != "":
+        original.translation = update_body.translation
+
+    db.add(original)
+    db.commit()
+    db.refresh(original)
+    return original
+
+

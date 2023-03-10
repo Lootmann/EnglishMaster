@@ -52,8 +52,29 @@ def find_by_id(sentence_id: int, db: Session = Depends(get_db)):
     response_model=sentence_schema.SentenceCreateResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_word(
+def create_sentence(
     sentence_body: sentence_schema.SentenceCreate,
     db: Session = Depends(get_db),
 ):
     return sentence_api.create_sentence(db, sentence_body)
+
+
+@router.patch(
+    "/sentences/{sentence_id}",
+    response_model=sentence_schema.Sentence,
+    status_code=status.HTTP_200_OK,
+)
+def update_sentence(
+    sentence_id: int,
+    sentence_body: sentence_schema.SentenceUpdate,
+    db: Session = Depends(get_db),
+):
+    sentence = sentence_api.find_by_id(db, sentence_id)
+    if not sentence:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sentence:{sentence_id} Not Found",
+        )
+    return sentence_api.update_sentence(db, sentence, sentence_body)
+
+

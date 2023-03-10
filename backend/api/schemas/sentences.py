@@ -19,6 +19,10 @@ class SentenceCreate(SentenceBase):
     pass
 
 
+class SentenceUpdate(SentenceBase):
+    pass
+
+
 class SentenceCreateResponse(SentenceCreate):
     id: int
 

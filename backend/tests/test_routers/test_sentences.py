@@ -67,7 +67,7 @@ class TestGetSentence:
 
 
 class TestPostSentences:
-    def test_create_sentences(self, client):
+    def test_create_sentence(self, client):
         sentence_data = {"text": "hoge", "translation": "ほげ"}
         resp = client.post("/sentences", json=sentence_data)
         assert resp.status_code == status.HTTP_201_CREATED
@@ -76,3 +76,43 @@ class TestPostSentences:
         SentenceFactory.create_sentence(client)
         resp = client.get("/sentences")
         assert len(resp.json()) == 1
+
+
+class TestUpdateSentences:
+    def test_update_sentence(self, client):
+        sentence_resp = SentenceFactory.create_sentence(client)
+
+        sentence_json = {"text": "updated", "translation": "updated"}
+        resp = client.patch(f"/sentences/{sentence_resp.id}", json=sentence_json)
+        assert resp.status_code == status.HTTP_200_OK
+
+        resp_obj = resp.json()
+        assert resp_obj["text"] != sentence_resp.text
+        assert resp_obj["text"] == "updated"
+        assert resp_obj["translation"] != sentence_resp.translation
+        assert resp_obj["translation"] == "updated"
+
+    def test_update_sentence_with_wrong_id(self, client):
+        SentenceFactory.create_sentence(client)
+        sentence_json = {"text": "updated", "translation": "updated"}
+        resp = client.patch(f"/sentences/123", json=sentence_json)
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_update_sentence_with_lack_postdata(self, client):
+        sentence_resp = SentenceFactory.create_sentence(client)
+        sentence_json = {"text": "updated"}
+        resp = client.patch(f"/sentences/{sentence_resp.id}", json=sentence_json)
+        assert resp.status_code == status.HTTP_200_OK
+
+        resp_obj = resp.json()
+        assert resp_obj["text"] != sentence_resp.text
+        assert resp_obj["text"] == "updated"
+        assert resp_obj["translation"] == sentence_resp.translation
+
+        sentence_json = {"translation": "updated"}
+        resp = client.patch(f"/sentences/{sentence_resp.id}", json=sentence_json)
+        assert resp.status_code == status.HTTP_200_OK
+
+        resp_obj = resp.json()
+        assert resp_obj["text"] == "updated"
+        assert resp_obj["translation"] == "updated"
