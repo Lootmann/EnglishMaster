@@ -10,6 +10,7 @@ export function RandomSentence() {
     id: 0,
     text: "",
     translation: "",
+    counter: 0,
   });
 
   const [isFlip, setFlip] = React.useState<boolean>(false);
@@ -22,6 +23,15 @@ export function RandomSentence() {
       console.log(resp.data[0]);
     });
   }, [refresh]);
+
+  function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    axios.post(API_URL + `/sentences/${sentence.id}/counter`).then((resp) => {
+      setSentence({ ...sentence, counter: sentence.counter + 1 });
+      console.log(resp);
+      console.log(resp.data);
+    });
+  }
 
   return (
     <>
@@ -52,9 +62,13 @@ export function RandomSentence() {
           </div>
 
           <div className="flex justify-center gap-8">
-            <p className="text-3xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md">
-              Read Count?
-            </p>
+            <button
+              type="submit"
+              className="text-3xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
+              onClick={(e) => handleClick(e)}
+            >
+              Read Count ({sentence.counter})
+            </button>
 
             <Link
               to={{}}
