@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App";
 import { Index } from "./components/Sentences";
+import { RandomSentence } from "./components/Sentences/RandomSentence";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Index />,
+      },
+      {
+        path: "/random",
+        element: <RandomSentence />,
       },
     ],
   },
