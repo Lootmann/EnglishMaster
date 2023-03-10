@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.get(
-    "/",
+    "",
     response_model=List[sentence_schema.Sentence],
     status_code=status.HTTP_200_OK,
 )
@@ -55,7 +55,7 @@ def find_by_id(sentence_id: int, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/",
+    "",
     response_model=sentence_schema.SentenceCreateResponse,
     status_code=status.HTTP_201_CREATED,
 )
