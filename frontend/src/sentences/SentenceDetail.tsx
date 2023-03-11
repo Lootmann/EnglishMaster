@@ -6,12 +6,8 @@ import { useEffect, useState } from "react";
 import "../styles/fonts.css";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  let sentence: SentenceType = initSentenceType();
-
-  await axios.get(API_URL + `/sentences/${params.sentenceId}`).then((resp) => {
-    sentence = resp.data;
-  });
-
+  const resp = await axios.get(API_URL + `/sentences/${params.sentenceId}`);
+  const sentence: SentenceType = await resp.data;
   return sentence;
 }
 
