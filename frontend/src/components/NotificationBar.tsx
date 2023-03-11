@@ -12,8 +12,6 @@ export function NotificationBar({
   color,
   durationMs,
 }: NotificationBarType) {
-  const [now, setNow] = useState<number>(Date.now());
-
   useEffect(() => {
     const timer = setTimeout(() => {
       handleNotification();
@@ -22,11 +20,14 @@ export function NotificationBar({
     return () => {
       clearTimeout(timer);
     };
-  }, [now]);
+  }, []);
 
   return (
-    <div className="absolute top-0 h-20 w-3/4 bg-slate-400">
-      {message} {color} {durationMs}
+    <div
+      style={{ backgroundColor: color }}
+      className="absolute top-0 right-0 w-3/5 p-1 pl-5 text-3xl bg-slate-400 text-black rounded-md animate-slide-in-top"
+    >
+      {message}
     </div>
   );
 }

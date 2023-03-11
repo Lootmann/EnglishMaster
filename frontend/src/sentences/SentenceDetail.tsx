@@ -39,19 +39,8 @@ export function SentenceDetail() {
     setForm({ ...form, [name]: value });
   }
 
-  // FIXME: when updated is success, show popup - success or fail
   function handleUpdate(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-
-    setToggleNotification(true);
-    setNotificationInfo({
-      handleNotification: () => {},
-      message: "updated :^)",
-      color: "green",
-      durationMs: 2000,
-    });
-    console.log(e);
-    return;
 
     axios
       .patch(API_URL + `/sentences/${sentence.id}`, {
@@ -62,6 +51,16 @@ export function SentenceDetail() {
         console.log(resp);
         console.log(resp.data);
       });
+
+    // FIXME: this runs should be in axios.patch. Execution of this function should be done
+    // FIXME: after receiving a success or failure Response
+    setToggleNotification(true);
+    setNotificationInfo({
+      handleNotification: () => {},
+      message: "updated :^)",
+      color: "green",
+      durationMs: 2000,
+    });
   }
 
   // redirect to top page
@@ -76,15 +75,7 @@ export function SentenceDetail() {
 
     setModalOpen(false);
 
-    // TODO: notification - is it working :^)
-    setToggleNotification(true);
-    setNotificationInfo({
-      handleNotification: () => {},
-      message: "deleted :^)",
-      color: "red",
-      durationMs: 2000,
-    });
-
+    // TODO: delete returns redirect, how to show the notification?
     navigate("/sentences");
   }
 
@@ -95,12 +86,10 @@ export function SentenceDetail() {
 
   useEffect(() => {
     setForm(sentence);
-    console.log(toggleNotification);
   }, [toggleNotification]);
 
-  // NOTE: text color black - Readable?
   return (
-    <div className="h-full flex flex-col gap-4 p-4">
+    <div className="h-full w-full flex flex-col gap-4 p-4">
       <header className="flex gap-6">
         <div>
           <h2 className="text-2xl bg-slate-600 px-6 rounded-md">
@@ -124,7 +113,6 @@ export function SentenceDetail() {
       </header>
 
       <div className="py-2 flex flex-col flex-1 gap-4">
-        {/* FIXME: which is better(readable) flex-col or flex-row? */}
         <textarea
           name="text"
           id="text"
@@ -149,7 +137,6 @@ export function SentenceDetail() {
         handleDelete={(e) => handleDelete(e)}
       />
 
-      {/* TODO: show notification */}
       {toggleNotification && (
         <NotificationBar
           handleNotification={handleNotification}
