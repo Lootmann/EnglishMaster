@@ -1,6 +1,11 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap"); */
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
 
 p {
-  font-family: "Roboto Mono", sans-serif;
+  font-family: "M Plus Rounded 1c", sans-serif;
+}
+
+.textarea {
+  font-family: "M Plus Rounded 1c", sans-serif;
 }
