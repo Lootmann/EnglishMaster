@@ -32,7 +32,6 @@ export function InputForm({
         console.log(resp.data);
       });
 
-    // remove Modal - continuous input
     setForm({ text: "", translation: "" });
     handleModal(false);
     handleRefresh();

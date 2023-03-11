@@ -10,7 +10,7 @@ export function initSentenceType(): SentenceType {
 
 export function initNotificationBarType(): NotificationBarType {
   return {
-    toggleNotification: true,
+    handleNotification: () => {},
     message: "",
     color: "",
     durationMs: 0,
