@@ -1,12 +1,15 @@
-import "./styles/index.css";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { App } from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Index } from "./sentences";
+import { SentenceRandom } from "./sentences/SentenceRandom";
+import "./styles/index.css";
 
-import App from "./App";
-import { Index } from "./components/Sentences";
-import { RandomSentence } from "./components/Sentences/RandomSentence";
+import {
+  loader as DetailSentenceLoader,
+  SentenceDetail,
+} from "./sentences/SentenceDetail";
 
 const router = createBrowserRouter([
   {
@@ -18,8 +21,17 @@ const router = createBrowserRouter([
         element: <Index />,
       },
       {
-        path: "/random",
-        element: <RandomSentence />,
+        path: "/sentences",
+        element: <Index />,
+      },
+      {
+        path: "/sentences/random",
+        element: <SentenceRandom />,
+      },
+      {
+        path: "/sentences/:sentenceId",
+        element: <SentenceDetail />,
+        loader: DetailSentenceLoader,
       },
     ],
   },

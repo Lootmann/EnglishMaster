@@ -1,7 +1,6 @@
 import React from "react";
-
-import InputForm from "./InputForm";
-import ShowSentence from "./ShowSentence";
+import { InputForm } from "../components/InputForm";
+import { SentenceTable } from "./SentenceTable";
 
 export function Index() {
   const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -28,7 +27,7 @@ export function Index() {
         </div>
 
         <div className="flex-1 bg-slate-500 rounded-md p-2">
-          <ShowSentence refresh={refresh} />
+          <SentenceTable refresh={refresh} />
         </div>
       </div>
 

@@ -1,10 +1,15 @@
 import axios from "axios";
 import React from "react";
+import { API_URL } from "../utils/settings";
+import { truncate } from "../utils/strings";
+import { useNavigate } from "react-router-dom";
 
-import { API_URL } from "../../utils/settings";
-import { truncate } from "../../utils/strings";
+export function SentenceTable({ refresh }: { refresh: boolean }) {
+  const navigate = useNavigate();
+  const goSentenceId = (sentence_id: number) => {
+    navigate(`/sentences/${sentence_id}`);
+  };
 
-function ShowSentence({ refresh }: { refresh: boolean }) {
   const [sentences, setSentences] = React.useState<SentenceType[]>([]);
 
   React.useEffect(() => {
@@ -31,6 +36,7 @@ function ShowSentence({ refresh }: { refresh: boolean }) {
               <tr
                 key={sentence.id}
                 className="text-xl border-b border-slate-600 hover:bg-slate-400 cursor-pointer"
+                onClick={() => goSentenceId(sentence.id)}
               >
                 <td className="text-center">{sentence.id}</td>
                 <th className="text-center">{sentence.counter}</th>
@@ -46,5 +52,3 @@ function ShowSentence({ refresh }: { refresh: boolean }) {
     </>
   );
 }
-
-export default ShowSentence;

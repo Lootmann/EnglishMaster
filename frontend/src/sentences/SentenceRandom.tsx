@@ -1,11 +1,10 @@
 import axios from "axios";
 import React from "react";
+import { API_URL } from "../utils/settings";
 import { Link } from "react-router-dom";
+import "../styles/fonts.css";
 
-import { API_URL } from "../../utils/settings";
-import "../../styles/fonts.css";
-
-export function RandomSentence() {
+export function SentenceRandom() {
   const [sentence, setSentence] = React.useState<SentenceType>({
     id: 0,
     text: "",
