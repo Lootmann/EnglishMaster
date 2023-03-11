@@ -1,9 +1,13 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
-import { initSentenceType } from "../utils/initializer";
+import { NotificationBar } from "../components/NotificationBar";
 import { useEffect, useState } from "react";
 import "../styles/fonts.css";
+import {
+  initNotificationBarType,
+  initSentenceType,
+} from "../utils/initializer";
 import {
   LoaderFunctionArgs,
   useLoaderData,
@@ -20,6 +24,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export function SentenceDetail() {
   const sentence = useLoaderData() as SentenceType;
 
+  const [toggleNotification, setToggleNotification] = useState<boolean>(false);
+  const [notificationInfo, setNotificationInfo] = useState<NotificationBarType>(
+    initNotificationBarType()
+  );
+  function handleNotification() {
+    setToggleNotification(false);
+  }
+
   const [form, setForm] = useState<SentenceType>(initSentenceType());
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
@@ -30,6 +42,17 @@ export function SentenceDetail() {
   // FIXME: when updated is success, show popup - success or fail
   function handleUpdate(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+
+    setToggleNotification(true);
+    setNotificationInfo({
+      handleNotification: () => {},
+      message: "updated :^)",
+      color: "green",
+      durationMs: 2000,
+    });
+    console.log(e);
+    return;
+
     axios
       .patch(API_URL + `/sentences/${sentence.id}`, {
         text: form.text,
@@ -52,6 +75,16 @@ export function SentenceDetail() {
     });
 
     setModalOpen(false);
+
+    // TODO: notification - is it working :^)
+    setToggleNotification(true);
+    setNotificationInfo({
+      handleNotification: () => {},
+      message: "deleted :^)",
+      color: "red",
+      durationMs: 2000,
+    });
+
     navigate("/sentences");
   }
 
@@ -62,7 +95,8 @@ export function SentenceDetail() {
 
   useEffect(() => {
     setForm(sentence);
-  }, []);
+    console.log(toggleNotification);
+  }, [toggleNotification]);
 
   // NOTE: text color black - Readable?
   return (
@@ -108,13 +142,22 @@ export function SentenceDetail() {
         ></textarea>
       </div>
 
-      {/* TODO: a pop-up window appears asking if it is really safe to delete the sentence. */}
       <DeleteModal
         isModalOpen={isModalOpen}
         handleModal={() => handleModal(false)}
         handleRefresh={() => {}}
         handleDelete={(e) => handleDelete(e)}
       />
+
+      {/* TODO: show notification */}
+      {toggleNotification && (
+        <NotificationBar
+          handleNotification={handleNotification}
+          message={notificationInfo.message}
+          color={notificationInfo.color}
+          durationMs={notificationInfo.durationMs}
+        />
+      )}
     </div>
   );
 }

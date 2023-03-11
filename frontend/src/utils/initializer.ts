@@ -7,3 +7,12 @@ export function initSentenceType(): SentenceType {
     counter: 0,
   };
 }
+
+export function initNotificationBarType(): NotificationBarType {
+  return {
+    toggleNotification: true,
+    message: "",
+    color: "",
+    durationMs: 0,
+  };
+}
