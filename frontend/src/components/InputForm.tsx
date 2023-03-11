@@ -1,6 +1,6 @@
 import axios from "axios";
-import React from "react";
 import { API_URL } from "../utils/settings";
+import { useState } from "react";
 
 type ModalProp = {
   isModalOpen: boolean;
@@ -13,7 +13,7 @@ export function InputForm({
   handleModal,
   handleRefresh,
 }: ModalProp) {
-  const [form, setForm] = React.useState<SentenceFormType>({
+  const [form, setForm] = useState<SentenceFormType>({
     text: "",
     translation: "",
   });

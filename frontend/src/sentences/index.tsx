@@ -1,14 +1,14 @@
-import React from "react";
 import { InputForm } from "../components/InputForm";
 import { SentenceTable } from "./SentenceTable";
+import { useState } from "react";
 
 export function Index() {
-  const [isModalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   function handleModal(isOpened: boolean) {
     setModalOpen(isOpened);
   }
 
-  const [refresh, setRefresh] = React.useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
   function handleRefresh() {
     setRefresh(!refresh);
   }

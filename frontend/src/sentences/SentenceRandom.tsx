@@ -1,22 +1,22 @@
 import axios from "axios";
-import React from "react";
 import { API_URL } from "../utils/settings";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "../styles/fonts.css";
 
 export function SentenceRandom() {
-  const [sentence, setSentence] = React.useState<SentenceType>({
+  const [sentence, setSentence] = useState<SentenceType>({
     id: 0,
     text: "",
     translation: "",
     counter: 0,
   });
 
-  const [isFlip, setFlip] = React.useState<boolean>(true);
+  const [isFlip, setFlip] = useState<boolean>(true);
 
-  const [refresh, setRefresh] = React.useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios.get(API_URL + "/sentences?random=true").then((resp) => {
       setSentence(resp.data[0]);
     });

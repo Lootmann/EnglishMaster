@@ -21,7 +21,7 @@ export function SentenceTable({ refresh }: { refresh: boolean }) {
   return (
     <>
       {sentences.length > 0 && (
-        <table className="table-fixed w-full text-slate-800">
+        <table className="table-fixed w-full border-spacing-y-10 text-slate-800">
           <thead className="border-b border-slate-900">
             <tr>
               <th className="w-10">Id</th>
@@ -39,7 +39,7 @@ export function SentenceTable({ refresh }: { refresh: boolean }) {
                 onClick={() => goSentenceId(sentence.id)}
               >
                 <td className="text-center">{sentence.id}</td>
-                <th className="text-center">{sentence.counter}</th>
+                <td className="text-center">{sentence.counter}</td>
                 <td className="text-center">{truncate(sentence.text, 20)}</td>
                 <td className="text-center">
                   {truncate(sentence.translation, 15)}
