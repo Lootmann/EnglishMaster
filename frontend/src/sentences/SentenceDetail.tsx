@@ -1,10 +1,10 @@
-import axios from "axios";
-import { API_URL } from "../utils/settings";
-import { DeleteModal } from "./DeleteModal";
-import { initNotificationBarType } from "../utils/initializer";
-import { NotificationBar } from "../components/NotificationBar";
-import { SyntheticEvent, useEffect, useState } from "react";
-import "../styles/fonts.css";
+import axios from 'axios';
+import { API_URL } from '../utils/settings';
+import { DeleteModal } from './DeleteModal';
+import { initNotificationBarType } from '../utils/initializer';
+import { NotificationBar } from '../components/NotificationBar';
+import { useEffect, useState } from 'react';
+import '../styles/fonts.css';
 import {
   LoaderFunctionArgs,
   useLoaderData,
