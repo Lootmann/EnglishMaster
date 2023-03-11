@@ -1,9 +1,14 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
+import { DeleteModal } from "./DeleteModal";
 import { initSentenceType } from "../utils/initializer";
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../styles/fonts.css";
+import {
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const resp = await axios.get(API_URL + `/sentences/${params.sentenceId}`);
@@ -36,8 +41,23 @@ export function SentenceDetail() {
       });
   }
 
+  // redirect to top page
+  const navigate = useNavigate();
+
   function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+
+    axios.delete(API_URL + `/sentences/${sentence.id}`).then((resp) => {
+      console.log(resp);
+    });
+
+    setModalOpen(false);
+    navigate("/sentences");
+  }
+
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  function handleModal(isOpen: boolean) {
+    setModalOpen(isOpen);
   }
 
   useEffect(() => {
@@ -61,10 +81,9 @@ export function SentenceDetail() {
           Update
         </button>
 
-        {/* TODO: show Modal - Are you sure to delete this sentence? */}
         <button
           className="text-2xl bg-red-800 hover:bg-red-600 transition-all duration-200 px-2 rounded-md"
-          onClick={(e) => handleDelete(e)}
+          onClick={() => handleModal(true)}
         >
           Delete
         </button>
@@ -75,7 +94,7 @@ export function SentenceDetail() {
         <textarea
           name="text"
           id="text"
-          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md"
+          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
           value={form.text}
         ></textarea>
@@ -83,11 +102,19 @@ export function SentenceDetail() {
         <textarea
           name="translation"
           id="translation"
-          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md"
+          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
           value={form.translation}
         ></textarea>
       </div>
+
+      {/* TODO: a pop-up window appears asking if it is really safe to delete the sentence. */}
+      <DeleteModal
+        isModalOpen={isModalOpen}
+        handleModal={() => handleModal(false)}
+        handleRefresh={() => {}}
+        handleDelete={(e) => handleDelete(e)}
+      />
     </div>
   );
 }

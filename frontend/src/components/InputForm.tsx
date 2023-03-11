@@ -2,12 +2,6 @@ import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { useState } from "react";
 
-type ModalProp = {
-  isModalOpen: boolean;
-  handleModal: (isOpened: boolean) => void;
-  handleRefresh: () => void;
-};
-
 export function InputForm({
   isModalOpen,
   handleModal,
