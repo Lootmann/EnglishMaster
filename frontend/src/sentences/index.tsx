@@ -26,7 +26,7 @@ export function Index() {
           </button>
         </div>
 
-        <div className="flex-1 bg-slate-500 rounded-md p-2">
+        <div className="flex-1 bg-slate-400 rounded-md p-2">
           <SentenceTable refresh={refresh} />
         </div>
       </div>

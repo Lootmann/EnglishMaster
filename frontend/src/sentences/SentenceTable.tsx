@@ -35,7 +35,7 @@ export function SentenceTable({ refresh }: { refresh: boolean }) {
             {sentences.map((sentence) => (
               <tr
                 key={sentence.id}
-                className="text-xl border-b border-slate-600 hover:bg-slate-400 cursor-pointer"
+                className="text-xl border-b border-slate-600 hover:bg-slate-300 cursor-pointer"
                 onClick={() => goSentenceId(sentence.id)}
               >
                 <td className="text-center">{sentence.id}</td>
