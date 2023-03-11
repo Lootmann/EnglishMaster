@@ -1,13 +1,10 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
+import { initNotificationBarType } from "../utils/initializer";
 import { NotificationBar } from "../components/NotificationBar";
 import { useEffect, useState } from "react";
 import "../styles/fonts.css";
-import {
-  initNotificationBarType,
-  initSentenceType,
-} from "../utils/initializer";
 import {
   LoaderFunctionArgs,
   useLoaderData,
@@ -28,11 +25,12 @@ export function SentenceDetail() {
   const [notificationInfo, setNotificationInfo] = useState<NotificationBarType>(
     initNotificationBarType()
   );
+
   function handleNotification() {
     setToggleNotification(false);
   }
 
-  const [form, setForm] = useState<SentenceType>(initSentenceType());
+  const [form, setForm] = useState<SentenceType>(sentence);
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
     const { name, value } = e.target;
@@ -74,7 +72,6 @@ export function SentenceDetail() {
     });
 
     setModalOpen(false);
-
     // TODO: delete returns redirect, how to show the notification?
     navigate("/sentences");
   }
@@ -84,9 +81,7 @@ export function SentenceDetail() {
     setModalOpen(isOpen);
   }
 
-  useEffect(() => {
-    setForm(sentence);
-  }, [toggleNotification]);
+  useEffect(() => {}, [toggleNotification]);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
