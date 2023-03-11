@@ -3,7 +3,7 @@ import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
 import { initNotificationBarType } from "../utils/initializer";
 import { NotificationBar } from "../components/NotificationBar";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import "../styles/fonts.css";
 import {
   LoaderFunctionArgs,
@@ -17,10 +17,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return sentence;
 }
 
-// TODO: ctrl + s -> save and popup when save is success
 export function SentenceDetail() {
   const sentence = useLoaderData() as SentenceType;
 
+  // set Notification
   const [toggleNotification, setToggleNotification] = useState<boolean>(false);
   const [notificationInfo, setNotificationInfo] = useState<NotificationBarType>(
     initNotificationBarType()
@@ -30,6 +30,7 @@ export function SentenceDetail() {
     setToggleNotification(false);
   }
 
+  // sentence form
   const [form, setForm] = useState<SentenceType>(sentence);
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
@@ -37,7 +38,9 @@ export function SentenceDetail() {
     setForm({ ...form, [name]: value });
   }
 
-  function handleUpdate(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleUpdate(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent
+  ) {
     e.preventDefault();
 
     axios
@@ -81,7 +84,20 @@ export function SentenceDetail() {
     setModalOpen(isOpen);
   }
 
-  useEffect(() => {}, [toggleNotification]);
+  // global key event: 'ctrl+s' runs Update sentence
+  function handleCtrlSKeyPress(e: KeyboardEvent) {
+    if (e.key == "s" && e.ctrlKey == true) {
+      e.preventDefault();
+      handleUpdate(e);
+    } else {
+      return;
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => handleCtrlSKeyPress(e));
+    return () => document.removeEventListener("keydown", handleCtrlSKeyPress);
+  }, [toggleNotification]);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
