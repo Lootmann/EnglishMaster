@@ -144,7 +144,7 @@ export function SentenceDetail() {
         <textarea
           name="text"
           id="text"
-          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
+          className="textarea flex-1 p-6 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
           value={sentenceForm.text}
         ></textarea>
@@ -152,7 +152,7 @@ export function SentenceDetail() {
         <textarea
           name="translation"
           id="translation"
-          className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
+          className="textarea flex-1 p-6 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
           value={sentenceForm.translation}
         ></textarea>
