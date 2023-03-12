@@ -12,14 +12,30 @@ export function SentenceRandom() {
     counter: 0,
   });
 
+  const [numRange, setNumRange] = useState<numOfWordRangeType>({
+    low: 0,
+    high: 9999,
+  });
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setNumRange({ ...numRange, [name]: Number(value) });
+  }
+
   const [isFlip, setFlip] = useState<boolean>(true);
 
   const [refresh, setRefresh] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get(API_URL + "/sentences?random=true").then((resp) => {
-      setSentence(resp.data[0]);
-    });
+    console.log(numRange);
+    axios
+      .get(
+        API_URL +
+          `/sentences?random=true&low=${numRange.low}&high=${numRange.high}`
+      )
+      .then((resp) => {
+        setSentence(resp.data[0]);
+      });
   }, [refresh]);
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -47,13 +63,13 @@ export function SentenceRandom() {
           >
             {isFlip ? (
               <p
-                className="text-2xl transition-all"
+                className="text-3xl transition-all"
                 onMouseDown={(e) => e.stopPropagation()}
               >
                 {sentence.text}
               </p>
             ) : (
-              <p className="text-2xl" onMouseDown={(e) => e.stopPropagation()}>
+              <p className="text-3xl" onMouseDown={(e) => e.stopPropagation()}>
                 {sentence.translation}
               </p>
             )}
@@ -83,6 +99,27 @@ export function SentenceRandom() {
             >
               Next Random
             </Link>
+          </div>
+
+          <div className="ml-auto mr-auto flex gap-2 mt-2">
+            <input
+              type="number"
+              name="low"
+              id="low"
+              className="w-32 text-center rounded-md text-xl text-black px-1"
+              value={numRange.low}
+              step={10}
+              onChange={(e) => handleChange(e)}
+            />
+            <input
+              type="number"
+              name="high"
+              id="high"
+              className="w-32 text-center rounded-md text-xl text-black px-1"
+              value={numRange.high}
+              step={10}
+              onChange={(e) => handleChange(e)}
+            />
           </div>
         </div>
       )}
