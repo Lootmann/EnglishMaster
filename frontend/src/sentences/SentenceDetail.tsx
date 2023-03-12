@@ -117,7 +117,7 @@ export function SentenceDetail() {
   }, [toggleNotification, isUpdated]);
 
   return (
-    <div className="h-full w-full flex flex-col gap-4 p-4">
+    <div className="h-full w-2/3 ml-auto mr-auto flex flex-col gap-4 p-4">
       <header className="flex gap-6">
         <div>
           <h2 className="text-2xl bg-slate-600 px-6 rounded-md">
@@ -140,7 +140,7 @@ export function SentenceDetail() {
         </button>
       </header>
 
-      <div className="py-2 flex flex-1 gap-4">
+      <div className="py-2 flex flex-col flex-1 gap-4">
         <textarea
           name="text"
           id="text"
