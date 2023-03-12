@@ -1,6 +1,6 @@
 from fastapi import status
 
-from tests.factory import SentenceFactory
+from tests.factory import SentenceFactory, random_string
 
 
 class TestGetAllSentences:
@@ -106,6 +106,44 @@ class TestGetSentenceNeighbors:
         resp = client.get("/sentences/9/neighbors")
         assert resp.status_code == status.HTTP_200_OK
         assert resp.json() == {"previous_id": 7, "next_id": None}
+
+
+class TestGetRandomSentenceByNumOfWords:
+    def test_get_random_sentence(self, client):
+        for _ in range(5):
+            SentenceFactory.create_sentence(
+                client, text=random_string(min_=20, max_=30)
+            )
+
+        for _ in range(8):
+            SentenceFactory.create_sentence(
+                client, text=random_string(min_=50, max_=60)
+            )
+
+        for _ in range(12):
+            SentenceFactory.create_sentence(
+                client, text=random_string(min_=100, max_=110)
+            )
+
+        resp = client.get("/sentences?random=true&low=0&high=30")
+        assert resp.status_code == status.HTTP_200_OK
+        assert 0 <= len(resp.json()[0]["text"]) <= 30
+
+        resp = client.get("/sentences?random=true&low=50&high=60")
+        assert resp.status_code == status.HTTP_200_OK
+        assert 50 <= len(resp.json()[0]["text"]) <= 60
+
+        resp = client.get("/sentences?random=true&low=100&high=110")
+        assert resp.status_code == status.HTTP_200_OK
+        assert 100 <= len(resp.json()[0]["text"]) <= 110
+
+        resp = client.get("/sentences?random=true&low=20&high=60")
+        assert resp.status_code == status.HTTP_200_OK
+        assert 20 <= len(resp.json()[0]["text"]) <= 60
+
+        resp = client.get("/sentences?random=true&low=50&high=110")
+        assert resp.status_code == status.HTTP_200_OK
+        assert 50 <= len(resp.json()[0]["text"]) <= 110
 
 
 class TestPostSentences:

@@ -23,10 +23,22 @@ def get_all_sentences(
     limit: int | None = None,
     offset: int | None = None,
     random: bool | None = None,
+    low: int | None = None,
+    high: int | None = None,
     db: Session = Depends(get_db),
 ):
     if random:
-        return [sentence_api.get_random(db)]
+        if low is None and high is None:
+            return [sentence_api.get_random(db)]
+
+        elif low is None and high is not None or low is not None and high is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=f"when you get sentences by num_of_words, you should specify both low and high",
+            )
+
+        else:
+            return sentence_api.get_num_of_words(db, low, high)
 
     if limit is None and offset is None:
         pass

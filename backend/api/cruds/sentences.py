@@ -1,3 +1,4 @@
+from random import choice
 from typing import List, Optional
 
 from sqlalchemy import func
@@ -30,6 +31,17 @@ def find_by_id(db: Session, sentence_id: int) -> SentenceModel | None:
 def get_random(db: Session) -> SentenceModel | None:
     stmt = db.query(SentenceModel).order_by(func.random())
     return stmt.first()
+
+
+def get_num_of_words(db: Session, low: int, high: int) -> List[SentenceModel]:
+    # FIXME: re-write much sqlalchemize query!
+    # this query can be slow for large datasets.
+    records = db.execute(select(SentenceModel)).scalars().all()
+    results = []
+    for record in records:
+        if low <= len(record.text) <= high:
+            results.append(record)
+    return [choice(results)]
 
 
 def create_sentence(
