@@ -2,11 +2,11 @@ import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
 import { initSentenceType } from "../utils/initializer";
-import { Link, useParams } from "react-router-dom";
 import { Pagination } from "../components/Pagination";
 import { toast, ToastContainer } from "react-toastify";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../styles/fonts.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,6 +28,7 @@ export function SentenceDetail() {
   const [sentenceForm, setSentenceForm] = useState<SentenceType>(
     initSentenceType()
   );
+
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
 
@@ -80,12 +81,45 @@ export function SentenceDetail() {
 
   // url params '/sentences/:sentenceId'
   const urlParam = useParams();
+  const formRef = useRef(null);
   useEffect(() => {
-    console.log(urlParam, sentenceForm);
+    // FIXME: this seems wrong :^)
+    function handleSaveShortcut(event: KeyboardEvent) {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        if (formRef.current !== null) {
+          const formData = new FormData(formRef.current);
+
+          axios
+            .patch(API_URL + `/sentences/${urlParam.sentenceId}`, {
+              text: formData.get("text"),
+              translation: formData.get("translation"),
+            })
+            .then((resp) => {
+              if (resp.status === 200) {
+                console.log(resp.data);
+                notifySuccess();
+              } else {
+                console.log(resp.data);
+                notifyFail();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              notifyFail();
+            });
+        }
+      }
+    }
 
     axios.get(API_URL + `/sentences/${urlParam.sentenceId}`).then((resp) => {
       setSentenceForm(resp.data);
     });
+
+    document.addEventListener("keydown", handleSaveShortcut);
+    return () => {
+      document.removeEventListener("keydown", handleSaveShortcut);
+    };
   }, [urlParam]);
 
   return (
@@ -118,7 +152,7 @@ export function SentenceDetail() {
         </div>
       </header>
 
-      <div className="py-2 flex flex-col flex-1 gap-4">
+      <form className="py-2 flex flex-col flex-1 gap-4" ref={formRef}>
         <textarea
           name="text"
           id="text"
@@ -134,7 +168,7 @@ export function SentenceDetail() {
           onChange={(e) => handleChange(e)}
           value={sentenceForm.translation}
         ></textarea>
-      </div>
+      </form>
 
       <DeleteModal
         isModalOpen={isModalOpen}
