@@ -1,10 +1,10 @@
-import axios from 'axios';
-import { API_URL } from '../utils/settings';
-import { DeleteModal } from './DeleteModal';
-import { initNotificationBarType } from '../utils/initializer';
-import { NotificationBar } from '../components/NotificationBar';
-import { useEffect, useState } from 'react';
-import '../styles/fonts.css';
+import axios from "axios";
+import { API_URL } from "../utils/settings";
+import { DeleteModal } from "./DeleteModal";
+import { initNotificationBarType } from "../utils/initializer";
+import { NotificationBar } from "../components/NotificationBar";
+import { useEffect, useState } from "react";
+import "../styles/fonts.css";
 import {
   LoaderFunctionArgs,
   useLoaderData,
@@ -18,8 +18,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export function SentenceDetail() {
-  const sentence = useLoaderData() as SentenceType;
-
   // set Notification
   const [toggleNotification, setToggleNotification] = useState<boolean>(false);
   const [notificationInfo, setNotificationInfo] = useState<NotificationBarType>(
@@ -30,12 +28,30 @@ export function SentenceDetail() {
     setToggleNotification(false);
   }
 
-  // sentence form
-  const [form, setForm] = useState<SentenceType>(sentence);
+  function showNotification(
+    message: string,
+    color: string,
+    durationMs: number
+  ) {
+    setToggleNotification(true);
+
+    setNotificationInfo({
+      handleNotification: () => {},
+      message: message,
+      color: color,
+      durationMs: durationMs,
+    });
+  }
+
+  // sentence
+  const sentence = useLoaderData() as SentenceType;
+  const [sentenceForm, setSentenceForm] = useState<SentenceType>(sentence);
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
+
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setSentenceForm({ ...sentenceForm, [name]: value });
+    setIsUpdated(true);
   }
 
   function handleUpdate(
@@ -45,23 +61,23 @@ export function SentenceDetail() {
 
     axios
       .patch(API_URL + `/sentences/${sentence.id}`, {
-        text: form.text,
-        translation: form.translation,
+        text: sentenceForm.text,
+        translation: sentenceForm.translation,
       })
       .then((resp) => {
-        console.log(resp);
-        console.log(resp.data);
+        if (resp.status === 200) {
+          console.log(resp.data);
+          setIsUpdated(false);
+          showNotification("updated :^)", "green", 2000);
+        } else {
+          console.log(resp.data);
+          showNotification("error D:", "red", 2000);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        showNotification("server error D:", "red", 2000);
       });
-
-    // FIXME: this runs should be in axios.patch. Execution of this function should be done
-    // FIXME: after receiving a success or failure Response
-    setToggleNotification(true);
-    setNotificationInfo({
-      handleNotification: () => {},
-      message: "updated :^)",
-      color: "green",
-      durationMs: 2000,
-    });
   }
 
   // redirect to top page
@@ -84,27 +100,28 @@ export function SentenceDetail() {
     setModalOpen(isOpen);
   }
 
-  // global key event: 'ctrl+s' runs Update sentence
+  // NOTE: global key event: 'ctrl+s' updated Sentence
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
   function handleCtrlSKeyPress(e: KeyboardEvent) {
-    if (e.key == "s" && e.ctrlKey == true) {
+    if (e.key == "s" && e.ctrlKey) {
+      // NOTE: ensures that this form is updated with the latest information
+      if (isUpdated) handleUpdate(e);
       e.preventDefault();
-      handleUpdate(e);
-    } else {
-      return;
     }
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", (e) => handleCtrlSKeyPress(e));
+    // add Keyboard Event
+    document.addEventListener("keydown", handleCtrlSKeyPress);
     return () => document.removeEventListener("keydown", handleCtrlSKeyPress);
-  }, [toggleNotification]);
+  }, [toggleNotification, isUpdated]);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
       <header className="flex gap-6">
         <div>
           <h2 className="text-2xl bg-slate-600 px-6 rounded-md">
-            SentenceID: {sentence.id}
+            SentenceID: {sentenceForm.id}
           </h2>
         </div>
 
@@ -129,7 +146,7 @@ export function SentenceDetail() {
           id="text"
           className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
-          value={form.text}
+          value={sentenceForm.text}
         ></textarea>
 
         <textarea
@@ -137,7 +154,7 @@ export function SentenceDetail() {
           id="translation"
           className="textarea flex-1 p-2 bg-slate-400 text-2xl text-black rounded-md outline-none"
           onChange={(e) => handleChange(e)}
-          value={form.translation}
+          value={sentenceForm.translation}
         ></textarea>
       </div>
 
