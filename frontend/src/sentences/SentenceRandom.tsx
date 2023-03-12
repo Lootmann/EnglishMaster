@@ -60,6 +60,14 @@ export function SentenceRandom() {
           </div>
 
           <div className="flex justify-center gap-8">
+            <Link
+              to={`/sentences/${sentence.id}`}
+              className="text-3xl bg-slate-600 hover:bg-teal-500 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
+              onClick={() => setRefresh(!refresh)}
+            >
+              Move To Detail
+            </Link>
+
             <button
               type="submit"
               className="text-3xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
