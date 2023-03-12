@@ -140,7 +140,7 @@ export function SentenceDetail() {
         </button>
       </header>
 
-      <div className="py-2 flex flex-col flex-1 gap-4">
+      <div className="py-2 flex flex-1 gap-4">
         <textarea
           name="text"
           id="text"
