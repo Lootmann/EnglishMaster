@@ -1,41 +1,28 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
+import { initSentenceType } from "../utils/initializer";
 import { Link, useParams } from "react-router-dom";
-import { NotificationBar } from "../components/NotificationBar";
-import { useEffect, useState } from "react";
+import { Pagination } from "../components/Pagination";
+import { toast, ToastContainer } from "react-toastify";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/fonts.css";
-import {
-  initNotificationBarType,
-  initSentenceType,
-} from "../utils/initializer";
+import "react-toastify/dist/ReactToastify.css";
 
 export function SentenceDetail() {
-  // set Notification
-  const [toggleNotification, setToggleNotification] = useState<boolean>(false);
-  const [notificationInfo, setNotificationInfo] = useState<NotificationBarType>(
-    initNotificationBarType()
-  );
-
-  function handleNotification() {
-    setToggleNotification(false);
-  }
-
-  function showNotification(
-    message: string,
-    color: string,
-    durationMs: number
-  ) {
-    setToggleNotification(true);
-
-    setNotificationInfo({
-      handleNotification: () => {},
-      message: message,
-      color: color,
-      durationMs: durationMs,
+  // notification
+  const notifySuccess = () => {
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_RIGHT,
     });
-  }
+  };
+
+  const notifyFail = () => {
+    toast.error("Error Notification !", {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
 
   // sentence
   const [sentenceForm, setSentenceForm] = useState<SentenceType>(
@@ -46,12 +33,9 @@ export function SentenceDetail() {
 
     const { name, value } = e.target;
     setSentenceForm({ ...sentenceForm, [name]: value });
-    setIsUpdated(true);
   }
 
-  function handleUpdate(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent> | KeyboardEvent
-  ) {
+  function handleUpdate(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
     axios
@@ -62,16 +46,15 @@ export function SentenceDetail() {
       .then((resp) => {
         if (resp.status === 200) {
           console.log(resp.data);
-          setIsUpdated(false);
-          showNotification("updated :^)", "green", 2000);
+          notifySuccess();
         } else {
           console.log(resp.data);
-          showNotification("error D:", "red", 2000);
+          notifyFail();
         }
       })
       .catch((error) => {
         console.log(error);
-        showNotification("server error D:", "red", 2000);
+        notifyFail();
       });
   }
 
@@ -95,47 +78,15 @@ export function SentenceDetail() {
     setModalOpen(isOpen);
   }
 
-  // NOTE: global key event: 'ctrl+s' updated Sentence
-  const [isUpdated, setIsUpdated] = useState<boolean>(false);
-  function handleCtrlSKeyPress(e: KeyboardEvent) {
-    if (e.key == "s" && e.ctrlKey) {
-      // NOTE: ensures that this form is updated with the latest information
-      if (isUpdated) handleUpdate(e);
-      e.preventDefault();
-    }
-  }
-
-  // NOTE: get neighbor: sentence next id, previous id
-  const [neighbors, setNeighbors] = useState<SentenceNeighborType>({
-    nextId: 0,
-    previousId: 0,
-  });
-
   // url params '/sentences/:sentenceId'
   const urlParam = useParams();
   useEffect(() => {
-    // After the page has transitioned, check that it has loaded successfully.
-    if (Number(urlParam.sentenceId) === sentenceForm.id) {
-      return;
-    }
+    console.log(urlParam, sentenceForm);
 
     axios.get(API_URL + `/sentences/${urlParam.sentenceId}`).then((resp) => {
       setSentenceForm(resp.data);
     });
-
-    axios
-      .get(API_URL + `/sentences/${urlParam.sentenceId}/neighbors`)
-      .then((resp) => {
-        setNeighbors({
-          nextId: resp.data.next_id,
-          previousId: resp.data.previous_id,
-        });
-      });
-
-    // add Keyboard Event
-    document.addEventListener("keydown", handleCtrlSKeyPress);
-    return () => document.removeEventListener("keydown", handleCtrlSKeyPress);
-  }, [toggleNotification, isUpdated, urlParam]);
+  }, [urlParam]);
 
   return (
     <div className="h-full w-2/3 ml-auto mr-auto flex flex-col gap-4 p-4">
@@ -161,28 +112,8 @@ export function SentenceDetail() {
         </button>
 
         <div className="ml-auto mr-20 flex gap-6">
-          {/* Previous  */}
-          {neighbors.previousId !== null ? (
-            <Link
-              to={`/sentences/${neighbors.previousId}`}
-              className="text-2xl bg-yellow-800 px-2 rounded-md"
-            >
-              Previous :D
-            </Link>
-          ) : (
-            <div className="text-2xl px-2 rounded-md">D:</div>
-          )}
-
-          {/* Next */}
-          {neighbors.nextId !== null ? (
-            <Link
-              to={`/sentences/${neighbors.nextId}`}
-              className="text-2xl bg-yellow-800 px-2 rounded-md"
-            >
-              Next :D
-            </Link>
-          ) : (
-            <div className="text-2xl px-2 rounded-md">D:</div>
+          {urlParam.sentenceId !== undefined && (
+            <Pagination currentId={Number(urlParam.sentenceId)} />
           )}
         </div>
       </header>
@@ -212,14 +143,7 @@ export function SentenceDetail() {
         handleDelete={(e) => handleDelete(e)}
       />
 
-      {toggleNotification && (
-        <NotificationBar
-          handleNotification={handleNotification}
-          message={notificationInfo.message}
-          color={notificationInfo.color}
-          durationMs={notificationInfo.durationMs}
-        />
-      )}
+      <ToastContainer />
     </div>
   );
 }
