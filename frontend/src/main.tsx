@@ -3,13 +3,9 @@ import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Index } from "./sentences";
+import { SentenceDetail } from "./sentences/SentenceDetail";
 import { SentenceRandom } from "./sentences/SentenceRandom";
 import "./styles/index.css";
-
-import {
-  loader as DetailSentenceLoader,
-  SentenceDetail,
-} from "./sentences/SentenceDetail";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +27,6 @@ const router = createBrowserRouter([
       {
         path: "/sentences/:sentenceId",
         element: <SentenceDetail />,
-        loader: DetailSentenceLoader,
       },
     ],
   },

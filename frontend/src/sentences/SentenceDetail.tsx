@@ -1,21 +1,15 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { DeleteModal } from "./DeleteModal";
-import { initNotificationBarType } from "../utils/initializer";
+import { Link, useParams } from "react-router-dom";
 import { NotificationBar } from "../components/NotificationBar";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/fonts.css";
 import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
-
-export async function loader({ params }: LoaderFunctionArgs) {
-  const resp = await axios.get(API_URL + `/sentences/${params.sentenceId}`);
-  const sentence: SentenceType = await resp.data;
-  return sentence;
-}
+  initNotificationBarType,
+  initSentenceType,
+} from "../utils/initializer";
 
 export function SentenceDetail() {
   // set Notification
@@ -44,8 +38,9 @@ export function SentenceDetail() {
   }
 
   // sentence
-  const sentence = useLoaderData() as SentenceType;
-  const [sentenceForm, setSentenceForm] = useState<SentenceType>(sentence);
+  const [sentenceForm, setSentenceForm] = useState<SentenceType>(
+    initSentenceType()
+  );
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     e.preventDefault();
 
@@ -60,7 +55,7 @@ export function SentenceDetail() {
     e.preventDefault();
 
     axios
-      .patch(API_URL + `/sentences/${sentence.id}`, {
+      .patch(API_URL + `/sentences/${sentenceForm.id}`, {
         text: sentenceForm.text,
         translation: sentenceForm.translation,
       })
@@ -86,7 +81,7 @@ export function SentenceDetail() {
   function handleDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
-    axios.delete(API_URL + `/sentences/${sentence.id}`).then((resp) => {
+    axios.delete(API_URL + `/sentences/${sentenceForm.id}`).then((resp) => {
       console.log(resp);
     });
 
@@ -110,11 +105,37 @@ export function SentenceDetail() {
     }
   }
 
+  // NOTE: get neighbor: sentence next id, previous id
+  const [neighbors, setNeighbors] = useState<SentenceNeighborType>({
+    nextId: 0,
+    previousId: 0,
+  });
+
+  // url params '/sentences/:sentenceId'
+  const urlParam = useParams();
   useEffect(() => {
+    // After the page has transitioned, check that it has loaded successfully.
+    if (Number(urlParam.sentenceId) === sentenceForm.id) {
+      return;
+    }
+
+    axios.get(API_URL + `/sentences/${urlParam.sentenceId}`).then((resp) => {
+      setSentenceForm(resp.data);
+    });
+
+    axios
+      .get(API_URL + `/sentences/${urlParam.sentenceId}/neighbors`)
+      .then((resp) => {
+        setNeighbors({
+          nextId: resp.data.next_id,
+          previousId: resp.data.previous_id,
+        });
+      });
+
     // add Keyboard Event
     document.addEventListener("keydown", handleCtrlSKeyPress);
     return () => document.removeEventListener("keydown", handleCtrlSKeyPress);
-  }, [toggleNotification, isUpdated]);
+  }, [toggleNotification, isUpdated, urlParam]);
 
   return (
     <div className="h-full w-2/3 ml-auto mr-auto flex flex-col gap-4 p-4">
@@ -138,6 +159,32 @@ export function SentenceDetail() {
         >
           Delete
         </button>
+
+        <div className="ml-auto mr-20 flex gap-6">
+          {/* Previous  */}
+          {neighbors.previousId !== null ? (
+            <Link
+              to={`/sentences/${neighbors.previousId}`}
+              className="text-2xl bg-yellow-800 px-2 rounded-md"
+            >
+              Previous :D
+            </Link>
+          ) : (
+            <div className="text-2xl px-2 rounded-md">D:</div>
+          )}
+
+          {/* Next */}
+          {neighbors.nextId !== null ? (
+            <Link
+              to={`/sentences/${neighbors.nextId}`}
+              className="text-2xl bg-yellow-800 px-2 rounded-md"
+            >
+              Next :D
+            </Link>
+          ) : (
+            <div className="text-2xl px-2 rounded-md">D:</div>
+          )}
+        </div>
       </header>
 
       <div className="py-2 flex flex-col flex-1 gap-4">
