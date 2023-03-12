@@ -50,6 +50,30 @@ def increase_count(db: Session, original: SentenceModel) -> SentenceModel:
     return original
 
 
+def find_neighbors(
+    db: Session,
+    current_sentence_id: int,
+) -> sentence_schema.SentenceNeighbors:
+    stmt = (
+        select(SentenceModel.id)
+        .order_by(SentenceModel.id.desc())
+        .where(SentenceModel.id < current_sentence_id)
+    )
+    previous_id = db.execute(stmt).scalar()
+
+    stmt = (
+        select(SentenceModel.id)
+        .order_by(SentenceModel.id.asc())
+        .where(SentenceModel.id > current_sentence_id)
+    )
+    next_id = db.execute(stmt).scalar()
+
+    return sentence_schema.SentenceNeighbors(
+        previous_id=previous_id,
+        next_id=next_id,
+    )
+
+
 def update_sentence(
     db: Session,
     original: SentenceModel,

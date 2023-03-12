@@ -76,6 +76,38 @@ class TestGetRandomSentence:
         assert len(resp.json()) == 1
 
 
+class TestGetSentenceNeighbors:
+    def test_get_neighbors(self, client):
+        """
+        ids: [1, 3, 5, 7, 9]
+        """
+        for _ in range(10):
+            SentenceFactory.create_sentence(client)
+
+        for sentence_id in range(2, 10 + 1, 2):
+            resp = client.delete(f"/sentences/{sentence_id}")
+            assert resp.status_code == status.HTTP_200_OK
+
+        # get 1's neighbors
+        resp = client.get("/sentences/1/neighbors")
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.json() == {"previous_id": None, "next_id": 3}
+
+        # get 2's neighbors
+        resp = client.get("/sentences/2/neighbors")
+        assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+        # get 7's neighbors
+        resp = client.get("/sentences/7/neighbors")
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.json() == {"previous_id": 5, "next_id": 9}
+
+        # get 9's neighbors
+        resp = client.get("/sentences/9/neighbors")
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.json() == {"previous_id": 7, "next_id": None}
+
+
 class TestPostSentences:
     def test_create_sentence(self, client):
         sentence_data = {"text": "hoge", "translation": "ほげ"}

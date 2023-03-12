@@ -36,3 +36,11 @@ class Sentence(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SentenceNeighbors(BaseModel):
+    previous_id: int | None
+    next_id: int | None
+
+    class Config:
+        orm_mode = True

@@ -54,6 +54,20 @@ def find_by_id(sentence_id: int, db: Session = Depends(get_db)):
     return res
 
 
+@router.get(
+    "/{sentence_id}/neighbors",
+    response_model=sentence_schema.SentenceNeighbors,
+    status_code=status.HTTP_200_OK,
+)
+def find_neighbors(sentence_id: int, db: Session = Depends(get_db)):
+    if not sentence_api.find_by_id(db, sentence_id):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sentence: {sentence_id} Not Found",
+        )
+    return sentence_api.find_neighbors(db, sentence_id)
+
+
 @router.post(
     "",
     response_model=sentence_schema.SentenceCreateResponse,
