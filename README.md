@@ -20,8 +20,10 @@ class Sentence:
 ### Endpoint
 
 ```
-GET   /sentences?limit=<int>&offset=<int>&random=true
+GET   /sentences?limit=<int>&offset=<int>
+GET   /sentences?random=true&low=<int>&high=<int>
 GET   /sentences/:sentence_id
+GET   /sentences/:sentence_id/neighbors
 POST  /sentences
 POST  /sentences/:sentence_id/counter
 PATCH /sentences/:sentence_id
