@@ -1,6 +1,9 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import List
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from api.db import Base
+from api.models.counters import Counter
 
 
 class Sentence(Base):
@@ -9,7 +12,12 @@ class Sentence(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str]
     translation: Mapped[str]
-    counter: Mapped[int]
+    counters: Mapped[List["Counter"]] = relationship(
+        "Counter", back_populates="sentence"
+    )
 
     def __repr__(self) -> str:
-        return f"<Sentence (id, counter, text, translation) = ({self.id}, {self.counter}, {self.text}, {self.translation})>"
+        return (
+            "<Sentence (id, counters, text, translation)"
+            + f" = ({self.id}, {len(self.counters)}, {self.text}, {self.translation})>"
+        )
