@@ -35,7 +35,7 @@ class Sentence(BaseModel):
     id: int
     text: str
     translation: str
-    counter: List[Counter]
+    counters: List[Counter]
 
     class Config:
         orm_mode = True
