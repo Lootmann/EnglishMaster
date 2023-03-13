@@ -4,59 +4,26 @@ import { isMonth, isToday, isWeek } from "../utils/date";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useState } from "react";
 
-// FIXME: O(N^2) seems shit :^)
-function aggregateMonth(sentences: SentenceType[]) {
-  let counts = 0;
-
-  for (const sentence of sentences) {
-    for (const counter of sentence.counters) {
-      if (isMonth(counter.created_at)) {
-        counts += 1;
-      }
-    }
-  }
-
-  return { title: "Month", counts: counts };
-}
-
-function aggregateWeek(sentences: SentenceType[]) {
-  let counts = 0;
-
-  for (const sentence of sentences) {
-    for (const counter of sentence.counters) {
-      if (isWeek(counter.created_at)) {
-        counts += 1;
-      }
-    }
-  }
-
-  return { title: "Week", counts: counts };
-}
-
-function aggregateToday(sentences: SentenceType[]) {
-  let counts = 0;
-
-  for (const sentence of sentences) {
-    for (const counter of sentence.counters) {
-      if (isToday(counter.created_at)) {
-        counts += 1;
-      }
-    }
-  }
-
-  return { title: "Today", counts: counts };
-}
-
 export function Aggregates() {
   const [sentences, setSentences] = useState<SentenceType[]>([]);
 
   function createData(sentences: SentenceType[]): Array<any> {
-    const res = [
-      aggregateToday(sentences),
-      aggregateWeek(sentences),
-      aggregateMonth(sentences),
+    let [count_today, count_week, count_month] = [0, 0, 0];
+
+    // FIXME: O(N^2) seems shit :^)
+    for (const sentence of sentences) {
+      for (const counter of sentence.counters) {
+        if (isMonth(counter.created_at)) count_month += 1;
+        if (isWeek(counter.created_at)) count_week += 1;
+        if (isToday(counter.created_at)) count_today += 1;
+      }
+    }
+
+    return [
+      { title: "Today", counts: count_today },
+      { title: "Week", counts: count_week },
+      { title: "Month", counts: count_month },
     ];
-    return res;
   }
 
   function createKeys() {
