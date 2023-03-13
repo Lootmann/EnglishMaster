@@ -35,5 +35,5 @@ python_functions = ["test"]
 concurrency = ["multiprocessing", "greenlet", "thread"]
 omit = ["tests/*", "venv", "./api/db.py", "**/*/__init__.py"]
 
-[tool.mypy.overrides]
+[[tool.mypy.overrides]]
 module = ["sqlalchemy.*", "uvicorn.*"]
