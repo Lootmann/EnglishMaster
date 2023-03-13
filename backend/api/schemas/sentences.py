@@ -1,10 +1,13 @@
+from typing import List
+
 from pydantic import BaseModel, Field
+
+from api.schemas.counters import Counter
 
 
 class SentenceBase(BaseModel):
     text: str = Field("")
     translation: str = Field("")
-    counter: int = Field(0)
 
     class Config:
         orm_mode = True
@@ -32,7 +35,7 @@ class Sentence(BaseModel):
     id: int
     text: str
     translation: str
-    counter: int
+    counter: List[Counter]
 
     class Config:
         orm_mode = True
