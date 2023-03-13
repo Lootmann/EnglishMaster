@@ -30,3 +30,7 @@ profile:
 .PHONY: dump
 dump:
 	sqlite3 dev.db .dump > ./dump/database.sql
+
+.PHONY: load
+load:
+	cat ./dump/database.sql | sqlite3 dev.db
