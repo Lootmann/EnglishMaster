@@ -56,7 +56,6 @@ export function Aggregates() {
       aggregateWeek(sentences),
       aggregateMonth(sentences),
     ];
-    console.log(res);
     return res;
   }
 
@@ -66,7 +65,6 @@ export function Aggregates() {
 
   useEffect(() => {
     axios.get(API_URL + "/sentences").then((resp) => {
-      console.log(resp.data);
       setSentences(resp.data);
     });
   }, []);
