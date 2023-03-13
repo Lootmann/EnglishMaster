@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import choice
 from typing import List, Optional
 
@@ -5,6 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import select
 
+from api.models.counters import Counter as CounterModel
 from api.models.sentences import Sentence as SentenceModel
 from api.schemas import sentences as sentence_schema
 
@@ -55,7 +57,8 @@ def create_sentence(
 
 
 def increase_count(db: Session, original: SentenceModel) -> SentenceModel:
-    original.counter += 1
+    counter = CounterModel(sentence_id=original.id, created_at=datetime.now())
+    original.counters.append(counter)
     db.add(original)
     db.commit()
     db.refresh(original)

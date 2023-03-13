@@ -6,7 +6,7 @@ migrate:
 	$(OPTION) python3 -m api.migrate_db
 
 test:
-	$(OPTION) python3 -m pytest -svv
+	$(OPTION) python3 -m pytest -svv ./tests/test_routers/test_sentences.py
 
 # re-test only failed tests
 re:

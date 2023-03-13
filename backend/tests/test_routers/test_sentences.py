@@ -161,11 +161,16 @@ class TestPostSentences:
 class TestPostSentenceIncreaseCounter:
     def test_increase_sentence_counter(self, client):
         sentence_resp = SentenceFactory.create_sentence(client)
-        assert sentence_resp.counter == 0
 
         resp = client.post(f"/sentences/{sentence_resp.id}/counter")
         obj = resp.json()
-        assert obj["counter"] == 1
+        assert obj["id"] == sentence_resp.id
+        assert obj["text"] == sentence_resp.text
+        assert obj["translation"] == sentence_resp.translation
+
+        resp = client.post(f"/sentences/{sentence_resp.id}/counter")
+        obj = resp.json()
+        assert len(obj["counters"]) == 2
 
 
 class TestUpdateSentences:

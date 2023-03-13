@@ -92,7 +92,11 @@ def create_sentence(
     return sentence_api.create_sentence(db, sentence_body)
 
 
-@router.post("/{sentence_id}/counter")
+@router.post(
+    "/{sentence_id}/counter",
+    response_model=sentence_schema.Sentence,
+    status_code=status.HTTP_201_CREATED,
+)
 def count_sentence(sentence_id: int, db: Session = Depends(get_db)):
     sentence = sentence_api.find_by_id(db, sentence_id)
     if not sentence:
