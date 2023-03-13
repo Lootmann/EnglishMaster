@@ -11,6 +11,7 @@ class Sentence:
   id: int
   text: str
   translation: str
+  counter: int
 ```
 
 
