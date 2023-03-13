@@ -4,31 +4,32 @@ import { isMonth, isToday, isWeek } from "../utils/date";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useState } from "react";
 
+function createData(sentences: SentenceType[]): Array<any> {
+  let [count_today, count_week, count_month] = [0, 0, 0];
+
+  // FIXME: O(N^2) seems shit :^)
+  // FIXME: create a dedicated API?
+  for (const sentence of sentences) {
+    for (const counter of sentence.counters) {
+      if (isMonth(counter.created_at)) count_month += 1;
+      if (isWeek(counter.created_at)) count_week += 1;
+      if (isToday(counter.created_at)) count_today += 1;
+    }
+  }
+
+  return [
+    { title: "Today", counts: count_today },
+    { title: "Week", counts: count_week },
+    { title: "Month", counts: count_month },
+  ];
+}
+
+function createKeys() {
+  return ["counts"];
+}
+
 export function Aggregates() {
   const [sentences, setSentences] = useState<SentenceType[]>([]);
-
-  function createData(sentences: SentenceType[]): Array<any> {
-    let [count_today, count_week, count_month] = [0, 0, 0];
-
-    // FIXME: O(N^2) seems shit :^)
-    for (const sentence of sentences) {
-      for (const counter of sentence.counters) {
-        if (isMonth(counter.created_at)) count_month += 1;
-        if (isWeek(counter.created_at)) count_week += 1;
-        if (isToday(counter.created_at)) count_today += 1;
-      }
-    }
-
-    return [
-      { title: "Today", counts: count_today },
-      { title: "Week", counts: count_week },
-      { title: "Month", counts: count_month },
-    ];
-  }
-
-  function createKeys() {
-    return ["counts"];
-  }
 
   useEffect(() => {
     axios.get(API_URL + "/sentences").then((resp) => {
