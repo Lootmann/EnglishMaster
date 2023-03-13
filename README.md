@@ -11,7 +11,13 @@ class Sentence:
   id: int
   text: str
   translation: str
-  counter: int
+  counters: list[Counter]
+
+
+class Counter:
+  id: int
+  sentence: sentence
+  created_at: datetime
 ```
 
 
