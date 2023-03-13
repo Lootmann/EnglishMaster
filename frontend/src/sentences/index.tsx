@@ -1,3 +1,4 @@
+import { Aggregates } from "./Aggregates";
 import { InputForm } from "../components/InputForm";
 import { SentenceTable } from "./SentenceTable";
 import { useState } from "react";
@@ -31,8 +32,8 @@ export function Index() {
         </div>
       </div>
 
-      <div className="flex-1 p-4 rounded-md">
-        <h2 className="text-2xl">Aggreates</h2>
+      <div className="flex flex-col flex-1 p-4 rounded-md">
+        <Aggregates />
       </div>
 
       {/* Modal */}
