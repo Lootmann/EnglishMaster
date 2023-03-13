@@ -9,7 +9,7 @@ export function SentenceRandom() {
     id: 0,
     text: "",
     translation: "",
-    counter: 0,
+    counters: [],
   });
 
   const [numRange, setNumRange] = useState<numOfWordRangeType>({
@@ -41,7 +41,7 @@ export function SentenceRandom() {
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     axios.post(API_URL + `/sentences/${sentence.id}/counter`).then((resp) => {
-      setSentence({ ...sentence, counter: sentence.counter + 1 });
+      setSentence(resp.data);
       console.log(">>> Sentences/RandomSentence.tsx", resp);
       console.log(resp.data);
     });
@@ -89,7 +89,7 @@ export function SentenceRandom() {
               className="text-3xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
               onClick={(e) => handleClick(e)}
             >
-              Read Count ({sentence.counter})
+              Read Count ({sentence.counters.length})
             </button>
 
             <Link

@@ -39,7 +39,7 @@ export function SentenceTable({ refresh }: { refresh: boolean }) {
                 onClick={() => goSentenceId(sentence.id)}
               >
                 <td className="text-center">{sentence.id}</td>
-                <td className="text-center">{sentence.counter}</td>
+                <td className="text-center">{sentence.counters.length}</td>
                 <td className="text-center">{truncate(sentence.text, 20)}</td>
                 <td className="text-center">
                   {truncate(sentence.translation, 15)}
