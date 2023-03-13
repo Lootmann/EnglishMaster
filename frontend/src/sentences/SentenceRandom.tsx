@@ -22,6 +22,27 @@ export function SentenceRandom() {
     setNumRange({ ...numRange, [name]: Number(value) });
   }
 
+  function handleSetRange(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    rangeString: string
+  ) {
+    e.preventDefault();
+    switch (rangeString) {
+      case "short": {
+        setNumRange({ low: 0, high: 120 });
+        break;
+      }
+      case "middle": {
+        setNumRange({ low: 120, high: 200 });
+        break;
+      }
+      case "long": {
+        setNumRange({ low: 200, high: 9999 });
+        break;
+      }
+    }
+  }
+
   const [isFlip, setFlip] = useState<boolean>(true);
 
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -101,25 +122,50 @@ export function SentenceRandom() {
             </Link>
           </div>
 
-          <div className="ml-auto mr-auto flex gap-2 mt-2">
-            <input
-              type="number"
-              name="low"
-              id="low"
-              className="w-32 text-center rounded-md text-xl text-black px-1"
-              value={numRange.low}
-              step={10}
-              onChange={(e) => handleChange(e)}
-            />
-            <input
-              type="number"
-              name="high"
-              id="high"
-              className="w-32 text-center rounded-md text-xl text-black px-1"
-              value={numRange.high}
-              step={10}
-              onChange={(e) => handleChange(e)}
-            />
+          <div className="ml-auto mr-auto flex flex-col gap-4 mt-2">
+            <div className="flex justify-center gap-4">
+              {/* NOTE: num range */}
+              <input
+                type="number"
+                name="low"
+                id="low"
+                className="w-32 text-center rounded-md text-2xl text-black px-1"
+                value={numRange.low}
+                step={10}
+                onChange={(e) => handleChange(e)}
+              />
+              <input
+                type="number"
+                name="high"
+                id="high"
+                className="w-32 text-center rounded-md text-2xl text-black px-1"
+                value={numRange.high}
+                step={10}
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+
+            <div className="flex justify-center gap-4">
+              {/* NOTE: set num range */}
+              <button
+                className="w-32 text-center rounded-md text-2xl text-black bg-slate-400 hover:bg-green-700 px-1"
+                onClick={(e) => handleSetRange(e, "short")}
+              >
+                short
+              </button>
+              <button
+                className="w-32 text-center rounded-md text-2xl text-black bg-slate-400 hover:bg-green-700 px-1"
+                onClick={(e) => handleSetRange(e, "middle")}
+              >
+                middle
+              </button>
+              <button
+                className="w-32 text-center rounded-md text-2xl text-black bg-slate-400 hover:bg-green-700 px-1"
+                onClick={(e) => handleSetRange(e, "long")}
+              >
+                long
+              </button>
+            </div>
           </div>
         </div>
       )}
