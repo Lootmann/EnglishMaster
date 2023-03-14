@@ -29,11 +29,13 @@ class SentenceUpdate(SentenceBase):
 
 class SentenceCreateResponse(SentenceCreate):
     id: int
+    num_of_words: int
 
 
 class Sentence(BaseModel):
     id: int
     text: str
+    num_of_words: int
     translation: str
     counters: List[Counter]
 

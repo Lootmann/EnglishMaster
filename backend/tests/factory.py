@@ -6,10 +6,12 @@ from api.schemas import sentences as sentence_schema
 
 
 def random_string(min_: int = 5, max_: int = 10) -> str:
-    text = ascii_letters
-    while len(text) < max_:
-        text += text
-    return "".join(sample(text, randint(min_, max_)))
+    return " ".join(
+        [
+            "".join(sample(ascii_letters, randint(0, len(ascii_letters) - 1)))
+            for _ in range(randint(min_, max_) + 1)
+        ]
+    )
 
 
 class SentenceFactory:

@@ -38,7 +38,8 @@ def get_all_sentences(
             )
 
         else:
-            return sentence_api.get_num_of_words(db, low, high)
+            record = sentence_api.get_num_of_words(db, low, high)
+            return [record]
 
     if limit is None and offset is None:
         pass

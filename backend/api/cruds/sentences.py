@@ -2,7 +2,7 @@ from datetime import datetime
 from random import choice
 from typing import List, Optional
 
-from sqlalchemy import func
+from sqlalchemy import between, func
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import select
 
@@ -35,21 +35,20 @@ def get_random(db: Session) -> SentenceModel | None:
     return stmt.first()
 
 
-def get_num_of_words(db: Session, low: int, high: int) -> List[SentenceModel]:
-    # FIXME: re-write much sqlalchemize query!
-    # this query can be slow for large datasets.
-    records = db.execute(select(SentenceModel)).scalars().all()
-    results = []
-    for record in records:
-        if low <= len(record.text) <= high:
-            results.append(record)
-    return [choice(results)]
+def get_num_of_words(db: Session, low: int, high: int) -> SentenceModel | None:
+    stmt = (
+        select(SentenceModel)
+        .where(between(SentenceModel.num_of_words, low, high))
+        .order_by(func.random())
+    )
+    return db.execute(stmt).scalar()
 
 
 def create_sentence(
     db: Session, sentence_body: sentence_schema.SentenceCreate
 ) -> SentenceModel:
     sentence = SentenceModel(**sentence_body.dict())
+    sentence.num_of_words = sentence_body.text.count(" ") + 1
     db.add(sentence)
     db.commit()
     db.refresh(sentence)
@@ -96,6 +95,7 @@ def update_sentence(
 ) -> SentenceModel:
     if update_body.text != "":
         original.text = update_body.text
+        original.num_of_words = update_body.text.count(" ") + 1
 
     if update_body.translation != "":
         original.translation = update_body.translation

@@ -127,23 +127,23 @@ class TestGetRandomSentenceByNumOfWords:
 
         resp = client.get("/sentences?random=true&low=0&high=30")
         assert resp.status_code == status.HTTP_200_OK
-        assert 0 <= len(resp.json()[0]["text"]) <= 30
+        assert 0 <= resp.json()[0]["num_of_words"] <= 30
 
         resp = client.get("/sentences?random=true&low=50&high=60")
         assert resp.status_code == status.HTTP_200_OK
-        assert 50 <= len(resp.json()[0]["text"]) <= 60
+        assert 50 <= resp.json()[0]["num_of_words"] <= 60
 
         resp = client.get("/sentences?random=true&low=100&high=110")
         assert resp.status_code == status.HTTP_200_OK
-        assert 100 <= len(resp.json()[0]["text"]) <= 110
+        assert 100 <= resp.json()[0]["num_of_words"] <= 110
 
         resp = client.get("/sentences?random=true&low=20&high=60")
         assert resp.status_code == status.HTTP_200_OK
-        assert 20 <= len(resp.json()[0]["text"]) <= 60
+        assert 20 <= resp.json()[0]["num_of_words"] <= 60
 
         resp = client.get("/sentences?random=true&low=50&high=110")
         assert resp.status_code == status.HTTP_200_OK
-        assert 50 <= len(resp.json()[0]["text"]) <= 110
+        assert 50 <= resp.json()[0]["num_of_words"] <= 110
 
 
 class TestPostSentences:
@@ -151,6 +151,11 @@ class TestPostSentences:
         sentence_data = {"text": "hoge", "translation": "ほげ"}
         resp = client.post("/sentences", json=sentence_data)
         assert resp.status_code == status.HTTP_201_CREATED
+
+        obj = resp.json()
+        assert obj["text"] == "hoge"
+        assert obj["translation"] == "ほげ"
+        assert obj["num_of_words"] == 1
 
     def test_sentence_factory(self, client):
         SentenceFactory.create_sentence(client)
@@ -212,6 +217,17 @@ class TestUpdateSentences:
         resp_obj = resp.json()
         assert resp_obj["text"] == "updated"
         assert resp_obj["translation"] == "updated"
+
+    def test_update_sentence_when_change_num_of_words(self, client):
+        sentence_resp = SentenceFactory.create_sentence(client, text="a b c")
+        assert sentence_resp.num_of_words == 3
+
+        sentence_json = {"text": "e f g h i j k"}
+        resp = client.patch(f"/sentences/{sentence_resp.id}", json=sentence_json)
+        assert resp.status_code == status.HTTP_200_OK
+
+        obj = resp.json()
+        assert obj["num_of_words"] == 7
 
 
 class TestDeleteSentence:
