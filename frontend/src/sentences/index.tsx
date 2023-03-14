@@ -27,16 +27,40 @@ export function Index() {
     handleRefresh();
   }
 
+  /**
+   * The pagination values are calculated around cpaginationCurrentPage value
+   * to the lesser and greater.
+   */
+  function createPaginationItems(length: number): any[] {
+    const current = paginationCurrentPage;
+    const set = new Set<number>();
+
+    for (let i = current; i > Math.max(0, current - 4); i--) {
+      set.add(i);
+    }
+    for (let i = current; i < Math.min(length, current + 4); i++) {
+      set.add(i);
+    }
+    set.add(0);
+    set.add(length);
+
+    const res: any = [...set].sort((a, b) => a - b);
+    let len = res.length;
+    for (let i = 0; i < len - 1; i++) {
+      if (Number(res[i]) != Number(res[i + 1]) - 1) {
+        res.splice(i + 1, 0, "...");
+        len++;
+        i++;
+      }
+    }
+    return res;
+  }
+
   useEffect(() => {
     // TODO: this api gets all sentences that has tons of CounterModels - very poor performance
     // TODO: get just number of sentences
     axios.get(API_URL + "/sentences").then((resp) => {
-      // setSentenceCount(resp.data.length);
-      const nums: number[] = [];
-      for (let i = 0; i < resp.data.length / LIMIT; i++) {
-        nums.push(i + 1);
-      }
-      setItemNumbers(nums);
+      setItemNumbers(createPaginationItems(resp.data.length));
     });
   }, [paginationCurrentPage]);
 
@@ -58,16 +82,20 @@ export function Index() {
         <div className="flex-1 flex flex-col bg-slate-400 rounded-md p-2">
           {itemNumbers.length > 0 && (
             <div className="ml-auto mr-auto flex gap-2 text-slate-800">
-              {itemNumbers.map((num) => (
-                <button
-                  key={num}
-                  onClick={(e) => handleClickPagination(e, num)}
-                  value={num}
-                  className="bg-slate-300 hover:bg-blue-500 rounded-md px-2"
-                >
-                  {num}
-                </button>
-              ))}
+              {itemNumbers.map((num) =>
+                Number.isInteger(num) ? (
+                  <button
+                    key={num}
+                    onClick={(e) => handleClickPagination(e, num)}
+                    value={num}
+                    className="bg-slate-300 hover:bg-blue-500 rounded-md px-2"
+                  >
+                    {num}
+                  </button>
+                ) : (
+                  <span key={Math.random()}>...</span>
+                )
+              )}
             </div>
           )}
 
