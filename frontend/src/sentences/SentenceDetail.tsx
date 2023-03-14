@@ -59,6 +59,18 @@ export function SentenceDetail() {
       });
   }
 
+  function handleCounter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    axios
+      .post(API_URL + `/sentences/${sentenceForm.id}/counter`)
+      .then((resp) => {
+        console.log(">>> Sentences/RandomSentence.tsx");
+        console.log(resp);
+        console.log(resp.data);
+        setSentenceForm({ ...sentenceForm, counters: resp.data.counters });
+      });
+  }
+
   // redirect to top page
   const navigate = useNavigate();
 
@@ -144,6 +156,16 @@ export function SentenceDetail() {
         >
           Delete
         </button>
+
+        {sentenceForm.counters && (
+          <button
+            type="submit"
+            className="text-2xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-2 rounded-md"
+            onClick={(e) => handleCounter(e)}
+          >
+            Read Count ({sentenceForm.counters.length})
+          </button>
+        )}
 
         <div className="ml-auto mr-20 flex gap-6">
           {urlParam.sentenceId !== undefined && (
