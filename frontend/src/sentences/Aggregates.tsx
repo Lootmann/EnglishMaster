@@ -1,7 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../utils/settings";
 import { Bar } from "./aggregates/bar";
-import { isMonth, isToday, isWeek } from "../utils/date";
 import { Pie } from "./aggregates/pie";
 import { useEffect, useState } from "react";
 
