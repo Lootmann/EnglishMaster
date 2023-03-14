@@ -7,6 +7,7 @@ type CounterType = {
 type SentenceType = {
   id: number;
   text: string;
+  num_of_word: number;
   translation: string;
   counters: CounterType[];
 };

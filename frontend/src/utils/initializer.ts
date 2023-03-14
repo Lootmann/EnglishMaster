@@ -3,8 +3,9 @@ export function initSentenceType(): SentenceType {
   return {
     id: 0,
     text: "",
+    num_of_word: 0,
     translation: "",
-    counter: 0,
+    counters: [],
   };
 }
 
