@@ -45,17 +45,17 @@ export function InputForm({
           onClick={() => handleModal(false)}
         >
           <div
-            className="flex flex-col relative top-24 left-32 h-2/3 w-1/3 gap-2 p-4 bg-slate-400 border-b rounded-md text-slate-800 text-xl"
+            className="flex flex-col relative top-24 left-32 h-3/4 w-2/5 gap-2 p-4 bg-slate-600 rounded-md text-slate-800 text-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <header className="flex justify-evenly items-baseline">
-              <h2 className="text-center border-b border-slate-800 text-3xl">
+              <h2 className="text-center text-slate-100 text-3xl rounded-md px-2">
                 Create Sentence
               </h2>
               <input
                 type="button"
                 value="Create"
-                className="text-2xl px-2 bg-slate-300 hover:bg-green-600 transition-all rounded-md"
+                className="text-2xl px-2 bg-green-600 hover:bg-green-400 transition-all rounded-md"
                 onClick={(e) => handleSubmit(e)}
               />
             </header>
@@ -65,14 +65,14 @@ export function InputForm({
                 name="text"
                 id="text"
                 onChange={(e) => handleChange(e)}
-                className="flex-1 bg-slate-500 rounded-md p-2 outline-none text-2xl"
+                className="flex-1 bg-slate-400 rounded-md p-2 outline-none text-2xl"
               ></textarea>
 
               <textarea
                 name="translation"
                 id="translation"
                 onChange={(e) => handleChange(e)}
-                className="flex-1 bg-slate-500 rounded-md p-2 outline-none text-2xl"
+                className="flex-1 bg-slate-400 rounded-md p-2 outline-none text-2xl"
               ></textarea>
             </form>
           </div>
