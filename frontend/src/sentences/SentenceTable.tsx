@@ -1,10 +1,16 @@
 import axios from "axios";
 import React from "react";
-import { API_URL } from "../utils/settings";
+import { API_URL, LIMIT } from "../utils/settings";
 import { truncate } from "../utils/strings";
 import { useNavigate } from "react-router-dom";
 
-export function SentenceTable({ refresh }: { refresh: boolean }) {
+export function SentenceTable({
+  refresh,
+  currentPage,
+}: {
+  refresh: boolean;
+  currentPage: number;
+}) {
   const navigate = useNavigate();
   const goSentenceId = (sentence_id: number) => {
     navigate(`/sentences/${sentence_id}`);
@@ -13,9 +19,12 @@ export function SentenceTable({ refresh }: { refresh: boolean }) {
   const [sentences, setSentences] = React.useState<SentenceType[]>([]);
 
   React.useEffect(() => {
-    axios.get(API_URL + "/sentences").then((resp) => {
-      setSentences(resp.data);
-    });
+    const offset: number = (currentPage - 1) * LIMIT;
+    axios
+      .get(API_URL + `/sentences?limit=${LIMIT}&offset=${offset}`)
+      .then((resp) => {
+        setSentences(resp.data);
+      });
   }, [refresh]);
 
   return (
