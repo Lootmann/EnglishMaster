@@ -19,6 +19,6 @@ class Sentence(Base):
 
     def __repr__(self) -> str:
         return (
-            "<Sentence (id, counters, text, text_length, translation)"
+            "<Sentence (id, counters, text, num_of_words, translation)"
             + f" = ({self.id}, {len(self.counters)}, {self.text}, {self.num_of_words}, {self.translation})>"
         )

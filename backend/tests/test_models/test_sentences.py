@@ -9,10 +9,11 @@ def test_sentence_model_repr():
     sentence_body = sentence_schema.SentenceCreate(text="hello", translation="こんにちは")
     sentence = SentenceModel(**sentence_body.dict())
     sentence.id = 1
+    sentence.num_of_words = "hello".count(" ") + 1
 
     assert (
         str(sentence)
-        == f"<Sentence (id, counters, text, translation) = (1, 0, hello, こんにちは)>"
+        == f"<Sentence (id, counters, text, num_of_words, translation) = (1, 0, hello, 1, こんにちは)>"
     )
 
 
@@ -20,6 +21,7 @@ def test_sentence_model_repr_with_counters():
     sentence_body = sentence_schema.SentenceCreate(text="hello", translation="こんにちは")
     sentence = SentenceModel(**sentence_body.dict())
     sentence.id = 1
+    sentence.num_of_words = "hello".count(" ") + 1
 
     # add counters
     CounterModel(id=1, sentence=sentence, created_at=datetime.now())
@@ -28,5 +30,5 @@ def test_sentence_model_repr_with_counters():
 
     assert (
         str(sentence)
-        == f"<Sentence (id, counters, text, translation) = (1, 3, hello, こんにちは)>"
+        == f"<Sentence (id, counters, text, num_of_words, translation) = (1, 3, hello, 1, こんにちは)>"
     )
