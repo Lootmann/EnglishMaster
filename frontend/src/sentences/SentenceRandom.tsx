@@ -10,7 +10,7 @@ export function SentenceRandom() {
 
   const [numRange, setNumRange] = useState<numOfWordRangeType>({
     low: 0,
-    high: 40,
+    high: 30,
   });
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
@@ -25,15 +25,15 @@ export function SentenceRandom() {
     e.preventDefault();
     switch (rangeString) {
       case "short": {
-        setNumRange({ low: 0, high: 40 });
+        setNumRange({ low: 0, high: 30 });
         break;
       }
       case "middle": {
-        setNumRange({ low: 40, high: 80 });
+        setNumRange({ low: 30, high: 60 });
         break;
       }
       case "long": {
-        setNumRange({ low: 80, high: 9999 });
+        setNumRange({ low: 60, high: 9999 });
         break;
       }
     }
@@ -101,7 +101,7 @@ export function SentenceRandom() {
           {sentence.id !== 0 && (
             <Link
               to={`/sentences/${sentence.id}`}
-              className="text-3xl bg-slate-600 hover:bg-teal-500 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
+              className="text-3xl bg-slate-600 hover:bg-rose-600 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
               onClick={() => setRefresh(!refresh)}
             >
               Move To Detail
@@ -110,7 +110,7 @@ export function SentenceRandom() {
 
           <Link
             to={{}}
-            className="text-3xl bg-slate-600 hover:bg-teal-500 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
+            className="text-3xl bg-slate-600 hover:bg-teal-600 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
             onClick={() => setRefresh(!refresh)}
           >
             Next Random
@@ -119,7 +119,7 @@ export function SentenceRandom() {
           {sentence.id !== 0 && (
             <button
               type="submit"
-              className="text-3xl bg-slate-600 hover:bg-indigo-400 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
+              className="text-3xl bg-slate-600 hover:bg-indigo-500 hover:text-slate-900 transition-all duration-200 px-3 py-1 rounded-md"
               onClick={(e) => handleClick(e)}
             >
               Read Count ({sentence.counters.length})
