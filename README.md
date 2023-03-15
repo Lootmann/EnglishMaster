@@ -10,6 +10,7 @@
 class Sentence:
   id: int
   text: str
+  num_of_word: int
   translation: str
   counters: list[Counter]
 
