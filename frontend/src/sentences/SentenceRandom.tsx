@@ -10,7 +10,7 @@ export function SentenceRandom() {
 
   const [numRange, setNumRange] = useState<numOfWordRangeType>({
     low: 0,
-    high: 120,
+    high: 40,
   });
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
